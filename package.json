@@ -1,0 +1,21 @@
+{
+  "name": "nekosapi",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [],
+  "author": "Cata <cata@libernets.org>",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "install": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}
