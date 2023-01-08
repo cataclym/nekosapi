@@ -1,3 +1,5 @@
+import fetch, {Response} from "node-fetch";
+
 export class NekosAPI {
 
   private readonly token: string | undefined;
@@ -27,7 +29,7 @@ export class NekosAPI {
 
     await NekosAPI.checkResponseCode(response);
 
-    return (<NekosResponse>await response.json())["data"]
+    return (<NekosResponse> await response.json())["data"]
         .map(image => new NekosImage(image));
   }
 
@@ -36,7 +38,7 @@ export class NekosAPI {
 
     await NekosAPI.checkResponseCode(response);
 
-    return new NekosImage((await response.json())["data"]);
+    return new NekosImage((<NekosResponse> await response.json())["data"][0]);
   }
 
   private static validateToken(token?: string) {
