@@ -1,6 +1,14 @@
 
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
 
-dist/
+# Dependency directories
+node_modules
 
-.idea/
+# Build generated files
+lib
+
+# IDE
+.idea
