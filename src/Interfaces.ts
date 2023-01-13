@@ -59,8 +59,12 @@ export interface Meta {
     dimens: Dimensions;
 }
 
-export interface NekosCategoryResponse {
-    data: Category[];
+type ArrayOrNot<T extends boolean> = T extends true
+    ? Category[]
+    : Category;
+
+export interface NekosCategoryResponse<T extends boolean> {
+    data: ArrayOrNot<T>;
     success: boolean;
 }
 

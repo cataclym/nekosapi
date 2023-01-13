@@ -1,27 +1,33 @@
-import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
-import { URL, URLSearchParams } from "url";
+import fetch, { Response } from "node-fetch";
+import { URL } from "url";
 import { Artist, Category, Character, NekosCategoryResponse, NekosResponse } from "./Interfaces";
 import NekosImage from "./NekosImage";
-import isRedirect = fetch.isRedirect;
+import { setTimeout } from "timers/promises";
+import { preventRateLimit } from "./preventRateLimit";
 
 export class NekosAPI {
 
     private readonly token: string | undefined;
     private readonly baseUrl: string;
-
+    /*
+    * Last time a request was sent to the API
+    */
+    public static lastRequest = new Date();
     public constructor(token?: string) {
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;
         }
         this.baseUrl = "https://nekos.nekidev.com/api/";
+        NekosAPI.lastRequest = new Date();
     }
 
+    @preventRateLimit()
     public async getImages(limit = 10, offset = 0): Promise<NekosImage[]> {
 
         if (!this.token) throw new Error("You need a valid access token to use this method.")
 
         const options = {
-            method: "POST",
+            method: "GET",
             headers: {
                 "Authorization": `Bearer ${this.token}`,
             },
@@ -40,7 +46,17 @@ export class NekosAPI {
             .map(image => new NekosImage(image));
     }
 
-    public async getRandomImage(categories?: string | string[], limit?: number): Promise<NekosImage[]> {
+    @preventRateLimit()
+    public async getRandomImages(categories?: string | string[], limit?: number): Promise<NekosImage[]> {
+        return this._getRandomImages(categories, limit);
+    }
+
+    @preventRateLimit()
+    public async getRandomImage(categories?: string | string[]): Promise<NekosImage> {
+        return (await this._getRandomImages(categories, 1))[0];
+    }
+
+    private async _getRandomImages(categories?: string | string[], limit?: number) {
 
         const query = categories
             ? Array.isArray(categories)
@@ -63,6 +79,7 @@ export class NekosAPI {
             .map(image => new NekosImage(image));
     }
 
+    @preventRateLimit()
     public async getImageByID(id: string): Promise<NekosImage> {
 
         const url = new URL(`${this.baseUrl}image/${id}`);
@@ -74,6 +91,7 @@ export class NekosAPI {
         return new NekosImage((await response.json())["data"]);
     }
 
+    @preventRateLimit()
     public async getArtistByID(id: string): Promise<Artist> {
 
         const url = new URL(`${this.baseUrl}artist/${id}`);
@@ -85,6 +103,7 @@ export class NekosAPI {
         return (await response.json())["data"] as Artist;
     }
 
+    @preventRateLimit()
     public async getImagesByArtistID(id: string, limit = 10, offset = 0): Promise<NekosImage[]> {
 
         const url = new URL(`${this.baseUrl}artist/${id}/images?`);
@@ -100,6 +119,7 @@ export class NekosAPI {
             .map(image => new NekosImage(image));
     }
 
+    @preventRateLimit()
     public async getCharacterByID(id: string): Promise<Character> {
 
         const url = new URL(`${this.baseUrl}character/${id}`);
@@ -111,7 +131,8 @@ export class NekosAPI {
         return (await response.json())["data"] as Character;
     }
 
-    public async getCategory(limit = 10, offset = 0): Promise<Category[]> {
+    @preventRateLimit()
+    public async getCategories(limit = 10, offset = 0): Promise<Category[]> {
 
         const url = new URL(`${this.baseUrl}category?`);
 
@@ -122,11 +143,22 @@ export class NekosAPI {
 
         await NekosAPI.checkResponseCode(response)
 
-        return (<NekosCategoryResponse> await response.json())["data"];
+        return (<NekosCategoryResponse<true>> await response.json())["data"];
+    }
+
+    @preventRateLimit()
+    public async getCategoryByID(categoryID: string): Promise<Category> {
+
+        const url = new URL(`${this.baseUrl}category/${categoryID}`);
+        const response = await fetch(url);
+
+        await NekosAPI.checkResponseCode(response)
+
+        return (<NekosCategoryResponse<false>> await response.json())["data"];
     }
 
     private static validateToken(token?: string) {
-        if ((token && Array.from(token.matchAll(NekosAPI.tokenRegex)).length) || !token) {
+        if ((token && token.match(NekosAPI.tokenRegex).length) || !token) {
             throw new Error("The token is invalid. It should be 100 characters long and contain numbers and lowercase/uppercase characters.");
         }
         else {
@@ -140,5 +172,5 @@ export class NekosAPI {
         }
     }
 
-    private static tokenRegex = /^[0-9a-zA-Z]{100}$/;
+    private static tokenRegex = /^[0-9a-zA-Z]{100}$/g;
 }
