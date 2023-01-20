@@ -158,7 +158,7 @@ export class NekosAPI {
     }
 
     private static validateToken(token?: string) {
-        if ((token && token.match(NekosAPI.tokenRegex).length) || !token) {
+        if ((token && !token.match(NekosAPI.tokenRegex)?.length) || !token) {
             throw new Error("The token is invalid. It should be 100 characters long and contain numbers and lowercase/uppercase characters.");
         }
         else {
