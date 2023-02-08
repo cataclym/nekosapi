@@ -13,3 +13,11 @@ const api = new NekosAPI();
 api.getRandomImage("catgirl")
     .then(image => console.log(image));
 ```
+
+### [Documentation](https://nekosapi.com/docs/libraries/javascript)
+
+### [Source code](https://gitlab.com/cataclym/nekosapi)
+
+---
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C3IJV8A)
