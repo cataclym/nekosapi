@@ -1,4 +1,3 @@
-import fetch, { Response } from "node-fetch";
 import { URL } from "url";
 import { Artist, Category, Character, NekosCategoryResponse, NekosResponse } from "./Interfaces";
 import NekosImage from "./NekosImage";
