@@ -1,13 +1,17 @@
 {
   "name": "nekosapi",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Async wrapper for NekosAPI",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
     "lib"
   ],
-  "keywords": ["API", "Wrapper", "Anime"],
+  "keywords": [
+    "API",
+    "Wrapper",
+    "Anime"
+  ],
   "repository": "https://github.com/cataclym/nekosapi",
   "type": "commonjs",
   "author": "Cata <cata@cata.moe>",
@@ -29,6 +33,6 @@
     "typescript": "^4.9.4"
   },
   "engines": {
-    "node" : ">=18.0.0"
+    "node": ">=18.0.0"
   }
 }

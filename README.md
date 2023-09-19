@@ -3,6 +3,8 @@
 
 ### Async wrapper for [Nekos API](https://nekos.nekidev.com/)
 
+#### Note: If you use nodejs with a version less than 18, then install version v0.3.2. `npm i nekosapi@0.3.2 -E`
+
 ```js
 const { NekosAPI } = require("nekosapi");
 
@@ -16,7 +18,7 @@ api.getRandomImage("catgirl")
 
 ### [Documentation](https://nekosapi.com/docs/libraries/javascript)
 
-### [Source code](https://gitlab.com/cataclym/nekosapi)
+### [Source code](https://github.com/cataclym/nekosapi)
 
 ---
 
