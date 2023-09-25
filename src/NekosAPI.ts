@@ -15,7 +15,7 @@ export class NekosAPI {
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;
         }
-        this.baseUrl = "https://nekos.nekidev.com/api/";
+        this.baseUrl = "https://v1.nekosapi.com/api/";
         NekosAPI.lastRequest = new Date();
     }
 

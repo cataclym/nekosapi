@@ -16,9 +16,9 @@ api.getRandomImage("catgirl")
 **Node:**
 
 | nekosapi version | Recommended | Minimum | npm                       |
-|------------------| ----------- |---------|---------------------------|
-| 0.4.0 and up     | 18.x        | 18.x    | `npm i nekosapi`          |
-| 0.3.1 to 0.3.2   | 18.x        | 16.x    | `npm i nekosapi@0.3.2 -E` |
+|------------------|-------------|---------|---------------------------|
+| 0.4.0 and up     | 18.x, 20.x  | 18.x    | `npm i nekosapi`          |
+| 0.3.1 to 0.3.2   | 18.x, 20.x  | 16.x    | `npm i nekosapi@0.3.2 -E` |
 
 
 ### [Documentation](https://nekosapi.com/docs/libraries/javascript)
