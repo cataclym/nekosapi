@@ -11,11 +11,21 @@ export class NekosAPI {
     * Last time a request was sent to the API
     */
     public static lastRequest = new Date();
+
+    private getHeaders = {
+        "Accept": "application/vnd.api+json",
+    }
+
+    private requestHeaders = {
+        "Accept": "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+    }
+
     public constructor(token?: string) {
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;
         }
-        this.baseUrl = "https://v1.nekosapi.com/api/";
+        this.baseUrl = "https://api.nekosapi.com/v2/";
         NekosAPI.lastRequest = new Date();
     }
 
@@ -49,6 +59,7 @@ export class NekosAPI {
         return this._getRandomImages(categories, limit);
     }
 
+    // TODO: Change categories to filters on all methods
     @preventRateLimit()
     public async getRandomImage(categories?: string | string[]): Promise<NekosImage> {
         return (await this._getRandomImages(categories, 1))[0];
@@ -64,10 +75,10 @@ export class NekosAPI {
 
         const limitQuery = limit || 1;
 
-        const url = new URL(`${this.baseUrl}image/random?`);
+        const url = new URL(`${this.baseUrl}images/random?`);
 
-        url.searchParams.append("categories", query);
-        url.searchParams.append("limit", String(limitQuery));
+        url.searchParams.append("filter[]", query);
+        url.searchParams.append("page[limit]", String(limitQuery));
 
         const response = await fetch(url);
 
