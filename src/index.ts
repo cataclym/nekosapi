@@ -1,1 +1,1 @@
-export * from "./NekosAPI";
+export * from "./NekosAPI"
