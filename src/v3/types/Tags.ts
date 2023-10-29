@@ -52,3 +52,5 @@ export enum Tags {
     Horsegirl = 51,
     Boy = 52
 }
+
+export type TagNames = keyof typeof Tags;

@@ -1,1 +1,2 @@
-export * from "./v3/NekosAPI";
+export * from "./v3";
+export * as v1 from "./v1";
