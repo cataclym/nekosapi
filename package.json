@@ -6,7 +6,8 @@
   "types": "index.d.ts",
   "files": [
     "v1",
-    "v3"
+    "v3",
+    "index*"
   ],
   "keywords": [
     "API",
