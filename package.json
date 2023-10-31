@@ -2,16 +2,17 @@
   "name": "nekosapi",
   "version": "0.4.4-2",
   "description": "Async wrapper for NekosAPI",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
-    "lib/v1",
-    "lib/v3"
+    "v1",
+    "v3"
   ],
   "keywords": [
     "API",
-    "Wrapper",
-    "Anime"
+    "Anime",
+    "Node",
+    "Images"
   ],
   "repository": "https://github.com/cataclym/nekosapi",
   "type": "commonjs",

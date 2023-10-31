@@ -1,35 +1,19 @@
 # nekosapi
 [![npm version](https://badge.fury.io/js/nekosapi.svg)](https://badge.fury.io/js/nekosapi)
 
-### Async wrapper for [Nekos API](https://nekosapi.com/) 
-Supports NekosAPI **v1** and **v3**
+[↰Back](../../README.md)
 
-#### Import NekosAPI v3:
-```ts
-// TypeScript
-import NekosAPI from "nekosapi";
-// JavaScript
-const { NekosAPI } = require("nekosapi");
+## Guide for 0.3.3 - 0.4.3
 
-const api = new NekosAPI();
-
-api.getRandomImage("Catgirl")
-    .then(image => console.log(image));
-```
-
-#### Import NekosAPI v1:
+#### Import NekosAPI using version 0.3.3 - 0.4.3
 ```js
-const { NekosAPIv1 } = require("nekosapi");
-// Or using /v1 path
-const { NekosAPI } = require("nekosapi/v1");
-// Or using default export in /v1 path
-import NekosAPI from "nekosapi/v1";
+const { NekosAPI } = require("nekosapi");
 
 // The constructor accepts a token
 const api = new NekosAPI();
 
 // Returns NekosImage object
-api.getRandomImage("Catgirl")
+api.getRandomImage("catgirl")
     .then(image => console.log(image));
 ```
 
@@ -40,7 +24,7 @@ api.getRandomImage("Catgirl")
 | 0.4.4            | 18.x, 20.x  | 18.x    | `npm i nekosapi`          |
 | 0.4.3 - (v1 only)| 18.x, 20.x  | 18.x    | `npm i nekosapi@0.4.3 -E` |
 | 0.3.3 - (v1 only)| 18.x, 20.x  | 16.x    | `npm i nekosapi@0.3.3 -E` |
-[Guide for using 0.3.3 - 0.4.3](src/v1/README.md)
+
 
 ### [Documentation](https://nekosapi.com/docs/libraries/javascript)
 

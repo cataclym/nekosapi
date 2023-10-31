@@ -2,56 +2,50 @@ import { URL } from "url";
 import { preventRateLimit } from "./preventRateLimit";
 import { TagNames, Tags } from "./types/Tags";
 import { ImageRandomInterface } from "./types/imageRandomInterface";
-import { ImageOptions } from "./types/imageOptions";
+import { BaseImageOptions, FullImageOptions } from "./types/baseImageOptions";
 import { Tag } from "./types/Tag";
 
 export class NekosAPI {
-
-    protected readonly token: string | undefined;
     private readonly baseUrl: string;
     /*
     * Last time a request was sent to the API
     */
     public static lastRequest = new Date();
 
-    public constructor(token?: string) {
-        if (token && NekosAPI.validateToken(token)) {
-            this.token = token;
-        }
+    public constructor() {
         this.baseUrl = "https://api.nekosapi.com/v3/";
         NekosAPI.lastRequest = new Date();
     }
 
     @preventRateLimit()
-    public async getRandomImage(tags?: TagNames | TagNames[], options?: ImageOptions): Promise<ImageRandomInterface> {
+    public async getImage(tags?: TagNames | TagNames[], options?: BaseImageOptions): Promise<ImageRandomInterface> {
+        options["limit"] = 1;
+        return (await this._getRandomImages(tags, options))[0];
+    }
+
+    public async getImages(tags?: TagNames | TagNames[], options?: FullImageOptions): Promise<ImageRandomInterface[]> {
+        return this._getRandomImages(tags, options);
+    }
+
+    private async _getRandomImages(tags: TagNames | TagNames[], options: FullImageOptions) {
+        const baseUrl = new URL(`${this.baseUrl}images?`);
+
+        const url = this.processSearchParams(baseUrl, tags, options);
+
+        return this.fetchResponse<ImageRandomInterface[]>(url)
+    }
+
+    @preventRateLimit()
+    public async getRandomImage(tags?: TagNames | TagNames[], options?: BaseImageOptions): Promise<ImageRandomInterface> {
         return this._getRandomImage(tags, options);
     }
 
-    private async _getRandomImage(tags?: TagNames | TagNames[], options?: ImageOptions) {
+    private async _getRandomImage(tags?: TagNames | TagNames[], options?: BaseImageOptions) {
+        const baseUrl = new URL(`${this.baseUrl}images/random?`);
 
-        const query = tags
-            ? Array.isArray(tags)
-                ? tags || []
-                : [tags]
-            : [];
+        const url = this.processSearchParams(baseUrl, tags, options);
 
-        const url = new URL(`${this.baseUrl}images/random?`);
-
-        for (const tag of query) {
-            url.searchParams.append("tag", String(Tags[tag]));
-        }
-
-        if (options) {
-            for (const [key, value] of Object.entries(options)) {
-                url.searchParams.append(key, String(value));
-            }
-        }
-
-        const response = await fetch(url);
-
-        await NekosAPI.checkResponseCode(response);
-
-        return <ImageRandomInterface> await response.json()
+        return this.fetchResponse<ImageRandomInterface>(url)
     }
 
     @preventRateLimit()
@@ -59,17 +53,13 @@ export class NekosAPI {
 
         const url = new URL(`${this.baseUrl}images/${id}`);
 
-        const response = await fetch(url);
-
-        await NekosAPI.checkResponseCode(response)
-
-        return <ImageRandomInterface> await response.json();
+        return this.fetchResponse<ImageRandomInterface>(url);
     }
 
     @preventRateLimit()
     public async getAllTags(): Promise<Tag[]> {
 
-        const url = new URL(`${this.baseUrl}/images/tags`);
+        const url = new URL(`${this.baseUrl}images/tags`);
 
         const response = await fetch(url);
 
@@ -82,27 +72,64 @@ export class NekosAPI {
     public async getTagByID(tagID: string): Promise<Tag> {
 
         const url = new URL(`${this.baseUrl}images/tags/${tagID}`);
-        const response = await fetch(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return <Tag> await response.json();
-    }
-
-    private static validateToken(token?: string) {
-        if ((token && !token.match(NekosAPI.tokenRegex)?.length) || !token) {
-            throw new Error("The token is invalid. It should be 100 characters long and contain numbers and lowercase/uppercase characters.");
-        }
-        else {
-            return true;
-        }
+        return this.fetchResponse<Tag>(url);
     }
 
     private static async checkResponseCode(response: Response) {
         if ((response.status > 200 && response.status <= 300) || !response.ok) {
-            throw new Error(`An error occurred while fetching the data from the server. ${response.statusText}. Status: ${response.status}`)
+            throw new Error(`An error occurred while fetching data from the server. ${response.statusText}. Status: ${response.status}`)
         }
     }
 
-    private static tokenRegex = /^[0-9a-zA-Z]{100}$/g;
+    private processSearchParams(url: URL, tags: TagNames | TagNames[], options: FullImageOptions) {
+        const query = tags
+            ? Array.isArray(tags)
+                ? tags || []
+                : [tags]
+            : [];
+
+
+        for (const tag of query) {
+            url.searchParams.append("tag", String(Tags[tag]));
+        }
+
+        if (options) {
+            if (options.artist) {
+                for (const artist of options.artist) {
+                    url.searchParams.append("artist", String(artist));
+                }
+                delete options.artist;
+            }
+
+            if (options.character) {
+                for (const character of options.character) {
+                    url.searchParams.append("character", String(character));
+                }
+                delete options.character;
+            }
+
+            if (options.rating) {
+                for (const rating of options.rating) {
+                    url.searchParams.append("rating", String(rating));
+                }
+                delete options.rating;
+            }
+
+            for (const [key, value] of Object.entries(options)) {
+                url.searchParams.append(key, String(value));
+            }
+        }
+
+        return url;
+    }
+
+    private async fetchResponse<T>(url: URL) {
+        const response = await fetch(url);
+
+        await NekosAPI.checkResponseCode(response);
+
+        return <T> await response.json()
+    }
+
 }
