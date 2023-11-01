@@ -1,4 +1,4 @@
-import { Tags } from "./Tags";
+import { Rating } from "./baseImageOptions";
 
 export interface ImageRandomInterface {
   id: number
@@ -12,13 +12,13 @@ export interface ImageRandomInterface {
   sample_height: number
   source: string
   source_id: number
-  rating: string
+  rating: Rating
   verification: string
   hash_md5: string
   hash_perceptual: string
   color_dominant: number[]
   color_palette: number[][]
-  duration: number
+  duration: number | null
   is_original: boolean
   is_screenshot: boolean
   is_flagged: boolean
@@ -57,8 +57,8 @@ export interface Character {
 }
 
 export interface Tag {
-  id: Tags,
-  name: `${Tags}`,
+  id: number,
+  name: string,
   description: string
   sub: string
   is_nsfw: boolean

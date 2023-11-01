@@ -4,6 +4,7 @@ import { TagNames, Tags } from "./types/Tags";
 import { ImageRandomInterface } from "./types/imageRandomInterface";
 import { BaseImageOptions, FullImageOptions } from "./types/baseImageOptions";
 import { Tag } from "./types/Tag";
+import { IntRange } from "./types/IntRange";
 
 export class NekosAPI {
     private readonly baseUrl: string;
@@ -19,12 +20,13 @@ export class NekosAPI {
 
     @preventRateLimit()
     public async getImage(tags?: TagNames | TagNames[], options?: BaseImageOptions): Promise<ImageRandomInterface> {
-        options["limit"] = 1;
-        return (await this._getRandomImages(tags, options))[0];
+        const optionsWithLimit = Object.assign({ limit: 1 as IntRange<0, 100> }, options)
+        return (await this._getRandomImages(tags, optionsWithLimit))["items"][0];
     }
 
+    @preventRateLimit()
     public async getImages(tags?: TagNames | TagNames[], options?: FullImageOptions): Promise<ImageRandomInterface[]> {
-        return this._getRandomImages(tags, options);
+        return (await this._getRandomImages(tags, options))["items"]
     }
 
     private async _getRandomImages(tags: TagNames | TagNames[], options: FullImageOptions) {

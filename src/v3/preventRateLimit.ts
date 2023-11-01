@@ -6,12 +6,13 @@ export function preventRateLimit() {
             const now = new Date().getTime();
             const elapsedTime = now - this.constructor.lastRequest.getTime();
 
-            if (elapsedTime < 1000) {
+            if (elapsedTime < 100) {
                 return new Promise(resolve => setTimeout(() => {
                     this.constructor.lastRequest = new Date();
                     return resolve(originalMethod.apply(this, args));
-                }, 1000));
+                }, 100));
             }
+
             else {
                 return originalMethod.apply(this, args);
             }
