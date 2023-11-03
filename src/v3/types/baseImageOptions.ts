@@ -6,12 +6,12 @@ export interface BaseImageOptions {
     is_screenshot?: boolean,
     is_flagged?: boolean,
     is_animated?: boolean,
-    artist?: number[],
+    artist?: number,
     character?: number[]
 }
 
 export interface FullImageOptions extends BaseImageOptions {
-    limit?: IntRange<0, 100>,
+    limit?: IntRange<1, 100>,
     offset?: number,
 }
 

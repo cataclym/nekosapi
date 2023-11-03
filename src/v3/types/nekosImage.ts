@@ -1,6 +1,7 @@
 import { Rating } from "./baseImageOptions";
+import { Tag } from "./Tag";
 
-export interface ImageRandomInterface {
+export interface NekosImage {
   id: number
   image_url: string
   sample_url: string
@@ -56,10 +57,6 @@ export interface Character {
   occupations: string[]
 }
 
-export interface Tag {
-  id: number,
-  name: string,
-  description: string
-  sub: string
-  is_nsfw: boolean
+export interface ArrayResponse<T> {
+  items: T[]
 }
