@@ -4,7 +4,7 @@
 ### Async wrapper for [Nekos API](https://nekosapi.com/) 
 Supports NekosAPI **v1** and **v3** 
 
-## [Documentation]("https://cataclym.github.io/nekosapi/")
+## [Documentation](https://cataclym.github.io/nekosapi/)
 
 ### Quick overview
 #### Import NekosAPI v3:
