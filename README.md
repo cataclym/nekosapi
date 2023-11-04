@@ -45,8 +45,6 @@ api.getRandomImage("Catgirl")
 | 0.3.3 - (v1 only)| 18.x, 20.x  | 16.x    | `npm i nekosapi@0.3.3 -E` |
 [Guide for using 0.3.3 - 0.4.3](src/v1/README.md)
 
-### [Documentation](https://nekosapi.com/docs/libraries/javascript)
-
 ### [Source code](https://github.com/cataclym/nekosapi)
 
 ---
