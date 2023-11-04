@@ -11,6 +11,16 @@ export class NekosAPI {
     * Last time a request was sent to the API
     */
     public static lastRequest = new Date();
+
+    private getHeaders = {
+        "Accept": "application/vnd.api+json",
+    }
+
+    private requestHeaders = {
+        "Accept": "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+    }
+
     public constructor(token?: string) {
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;

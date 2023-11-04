@@ -12,3 +12,10 @@ lib
 
 # IDE
 .idea
+/index.d.ts
+/index.d.ts.map
+/index.js
+/v1/
+/v3/
+
+index.js.map
