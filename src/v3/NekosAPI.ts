@@ -100,7 +100,7 @@ export class NekosAPI {
 
     @preventRateLimit()
     public async getAllCharacters(options?: Partial<CharacterOptions>): Promise<Character[]> {
-        const baseUrl = new URL(`${this.baseUrl}artists`);
+        const baseUrl = new URL(`${this.baseUrl}characters`);
         const url = this.processSearchParams(baseUrl, [], options);
         return (await this.fetchResponse<ArrayResponse<Character>>(url)).items
     }
@@ -129,22 +129,15 @@ export class NekosAPI {
         }
 
         if (options) {
-            if (options.character) {
-                for (const character of options.character) {
-                    url.searchParams.append("character", String(character));
-                }
-                delete options.character;
-            }
-
-            if (options.rating) {
-                for (const rating of options.rating) {
-                    url.searchParams.append("rating", String(rating));
-                }
-                delete options.rating;
-            }
-
             for (const [key, value] of Object.entries(options)) {
-                url.searchParams.append(key, String(value));
+                if (Array.isArray(value)) {
+                    for (const arrayValue of value) {
+                        url.searchParams.append(key, String(arrayValue));
+                    }
+                }
+                else {
+                    url.searchParams.append(key, String(value));
+                }
             }
         }
 
