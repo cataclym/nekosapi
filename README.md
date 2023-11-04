@@ -2,8 +2,11 @@
 [![npm version](https://badge.fury.io/js/nekosapi.svg)](https://badge.fury.io/js/nekosapi)
 
 ### Async wrapper for [Nekos API](https://nekosapi.com/) 
-Supports NekosAPI **v1** and **v3**
+Supports NekosAPI **v1** and **v3** 
 
+## [Documentation]("https://cataclym.github.io/nekosapi/")
+
+### Quick overview
 #### Import NekosAPI v3:
 ```ts
 // TypeScript
