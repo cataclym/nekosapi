@@ -38,11 +38,11 @@ api.getRandomImage("Catgirl")
 
 **Node version guide**
 
-| nekosapi version | Recommended | Minimum | npm                       |
-|------------------|-------------|---------|---------------------------|
-| 0.4.4            | 18.x, 20.x  | 18.x    | `npm i nekosapi`          |
-| 0.4.3 - (v1 only)| 18.x, 20.x  | 18.x    | `npm i nekosapi@0.4.3 -E` |
-| 0.3.3 - (v1 only)| 18.x, 20.x  | 16.x    | `npm i nekosapi@0.3.3 -E` |
+| nekosapi version  | Recommended | Minimum | npm                       |
+|-------------------|-------------|---------|---------------------------|
+| 0.5.x             | 18.x, 20.x  | 18.x    | `npm i nekosapi`          |
+| 0.4.3 - (v1 only) | 18.x, 20.x  | 18.x    | `npm i nekosapi@0.4.3 -E` |
+| 0.3.3 - (v1 only) | 18.x, 20.x  | 16.x    | `npm i nekosapi@0.3.3 -E` |
 [Guide for using 0.3.3 - 0.4.3](src/v1/README.md)
 
 ### [Source code](https://github.com/cataclym/nekosapi)
