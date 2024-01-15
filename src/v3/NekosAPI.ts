@@ -13,6 +13,9 @@ import { IntRange } from "./types/IntRange";
 import { ArtistOptions } from "./types/artistOptions";
 import { CharacterOptions } from "./types/characterOptions";
 import { TagOptions } from "./types/tagOptions";
+import axios from "axios";
+import { CustomProxy } from "./types/Proxy";
+import { SocksProxyAgent } from "socks-proxy-agent";
 
 export class NekosAPI {
     private readonly baseUrl: string;
@@ -21,9 +24,21 @@ export class NekosAPI {
     */
     public static lastRequest = new Date();
 
+    private socks5Proxy: CustomProxy
+
     public constructor() {
         this.baseUrl = "https://api.nekosapi.com/v3/";
         NekosAPI.lastRequest = new Date();
+
+        this.socks5Proxy = {
+            protocol: "socks5",
+            host: process.env.PROXY_HOST!,
+            port: parseFloat(process.env.PROXY_PORT!),
+            auth: {
+                username: process.env.PROXY_USER != undefined ? process.env.PROXY_USER : "",
+                password: process.env.PROXY_PASS != undefined ? process.env.PROXY_PASS : "",
+            },
+        }
     }
 
     @preventRateLimit()
@@ -65,8 +80,6 @@ export class NekosAPI {
     public async getAllTags(options?: Partial<TagOptions>): Promise<Tag[]> {
         const baseUrl = new URL(`${this.baseUrl}images/tags`);
         const url = this.processSearchParams(baseUrl, [], options);
-        const response = await fetch(url);
-        await NekosAPI.checkResponseCode(response)
         return (await this.fetchResponse<ArrayResponse<Tag>>(url)).items
     }
 
@@ -111,9 +124,9 @@ export class NekosAPI {
         return this.fetchResponse<Character>(url)
     }
 
-    private static async checkResponseCode(response: Response) {
-        if ((response.status > 200 && response.status <= 300) || !response.ok) {
-            throw new Error(`An error occurred while fetching data from the server. ${response.statusText}. Status: ${response.status}. ${response.url}`)
+    private static async checkResponseCode<T>(response: axios.AxiosResponse<T>) {
+        if (response.status > 200 && response.status <= 300) {
+            throw new Error(`An error occurred while fetching data from the server. ${response.statusText}. Status: ${response.status}. ${response.request?.url || ""}`)
         }
     }
 
@@ -145,8 +158,33 @@ export class NekosAPI {
     }
 
     private async fetchResponse<T>(url: URL): Promise<T> {
-        const response = await fetch(url);
+
+        const promise = async (): Promise<axios.AxiosResponse<T>> => {
+            if (process.env.PROXY_HOST != undefined) {
+
+                const proxyURL = `${this.socks5Proxy.protocol}://${this.socks5Proxy.auth.username}:${this.socks5Proxy.auth.password}@${this.socks5Proxy.host}:${this.socks5Proxy.port}`;
+
+                return axios.get(
+                    url.toString(),
+                    {
+                        httpsAgent: new SocksProxyAgent(proxyURL),
+                        responseType: "json",
+                    },
+                )
+            }
+
+            else {
+                return axios.get(
+                    url.toString(),
+                    {
+                        responseType: "json",
+                    },
+                )
+            }
+        }
+
+        const response = await promise();
         await NekosAPI.checkResponseCode(response);
-        return <T> await response.json()
+        return response.data;
     }
 }
