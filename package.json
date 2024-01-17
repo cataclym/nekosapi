@@ -26,7 +26,8 @@
   },
   "scripts": {
     "prepublish": "tsc -b --clean && rm -rf v1/ v3/ && tsc",
-    "docs": "typedoc src/index.ts --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-mdn-links --plugin typedoc-plugin-rename-defaults"
+    "docs": "typedoc src/index.ts --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-mdn-links --plugin typedoc-plugin-rename-defaults",
+    "test": "node test.js"
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
