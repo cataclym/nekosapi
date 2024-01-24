@@ -1,5 +1,7 @@
+import { NekosAPI } from "./NekosAPI";
+
 export function preventRateLimit() {
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return function(target: NekosAPI, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function(...args) {

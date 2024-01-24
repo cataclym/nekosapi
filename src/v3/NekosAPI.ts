@@ -1,21 +1,16 @@
 import { URL } from "url";
+import axios from "axios";
+import { SocksProxyAgent } from "socks-proxy-agent";
 import { preventRateLimit } from "./preventRateLimit";
 import { TagNames, Tags } from "./types/Tags";
-import {
-    ArrayResponse,
-    Artist,
-    Character,
-    NekosImage,
-} from "./types/nekosImage";
+import { ArrayResponse, Artist, Character, NekosImage } from "./types/nekosImage";
 import { BaseImageOptions, FullImageOptions } from "./types/baseImageOptions";
 import { Tag } from "./types/Tag";
 import { IntRange } from "./types/IntRange";
 import { ArtistOptions } from "./types/artistOptions";
 import { CharacterOptions } from "./types/characterOptions";
 import { TagOptions } from "./types/tagOptions";
-import axios from "axios";
 import { CustomProxy } from "./types/Proxy";
-import { SocksProxyAgent } from "socks-proxy-agent";
 
 export class NekosAPI {
     private readonly baseUrl: string;
@@ -172,7 +167,6 @@ export class NekosAPI {
                     },
                 )
             }
-
             else {
                 return axios.get(
                     url.toString(),

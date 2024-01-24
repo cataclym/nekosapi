@@ -14,7 +14,7 @@ export default class NekosImage {
     readonly size: number;
     readonly mimetype: string;
     readonly color: HexString;
-    readonly expires: any;
+    readonly expires: Date;
     readonly dimensions: Dimensions;
     constructor(data: NekosData) {
         this.id=data["id"];

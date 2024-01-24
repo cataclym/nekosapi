@@ -45,7 +45,7 @@ export interface NekosData {
     original: null;
     nsfw: string;
     categories: Category[];
-    characters: any[];
+    characters: never[];
     createdAt: Date;
     meta: Meta;
 }

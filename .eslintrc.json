@@ -19,7 +19,9 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
   ],
   "rules": {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
@@ -115,6 +117,7 @@
     ],
     "no-mixed-spaces-and-tabs": "off",
     "no-shadow": "off",
-    "array-bracket-newline": "error"
+    "array-bracket-newline": "error",
+    "import/order": ["error"]
   }
 }
