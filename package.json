@@ -43,10 +43,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "socks-proxy-agent": "^8.0.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }
