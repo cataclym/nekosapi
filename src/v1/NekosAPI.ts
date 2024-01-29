@@ -1,9 +1,10 @@
 import { URL } from "url";
-import { Artist, Category, Character, NekosCategoryResponse, NekosResponse } from "./Interfaces";
+import Base from "../base";
+import { Artist, Category, Character, NekosCategoryResponse, NekosData, NekosResponse } from "./Interfaces";
 import NekosImage from "./NekosImage";
 import { preventRateLimit } from "./preventRateLimit";
 
-export class NekosAPI {
+export class NekosAPI extends Base {
 
     private readonly token: string | undefined;
     private readonly baseUrl: string;
@@ -12,16 +13,8 @@ export class NekosAPI {
     */
     public static lastRequest = new Date();
 
-    private getHeaders = {
-        "Accept": "application/vnd.api+json",
-    }
-
-    private requestHeaders = {
-        "Accept": "application/vnd.api+json",
-        "Content-Type": "application/vnd.api+json",
-    }
-
     public constructor(token?: string) {
+        super();
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;
         }
@@ -46,11 +39,9 @@ export class NekosAPI {
         url.searchParams.append("offset", String(offset));
         url.searchParams.append("limit", String(limit));
 
-        const response = await fetch(url, options);
+        const response = await this.fetchResponse<NekosResponse>(url, options);
 
-        await NekosAPI.checkResponseCode(response);
-
-        return (<NekosResponse> await response.json())["data"]
+        return response["data"]
             .map(image => new NekosImage(image));
     }
 
@@ -79,11 +70,9 @@ export class NekosAPI {
         url.searchParams.append("categories", query);
         url.searchParams.append("limit", String(limitQuery));
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<NekosResponse>(url);
 
-        await NekosAPI.checkResponseCode(response);
-
-        return (<NekosResponse> await response.json())["data"]
+        return response["data"]
             .map(image => new NekosImage(image));
     }
 
@@ -92,11 +81,9 @@ export class NekosAPI {
 
         const url = new URL(`${this.baseUrl}image/${id}`);
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<NekosData>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return new NekosImage((await response.json())["data"]);
+        return new NekosImage(response);
     }
 
     @preventRateLimit()
@@ -104,11 +91,9 @@ export class NekosAPI {
 
         const url = new URL(`${this.baseUrl}artist/${id}`);
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<{data: Artist}>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return (await response.json())["data"] as Artist;
+        return response["data"];
     }
 
     @preventRateLimit()
@@ -119,11 +104,9 @@ export class NekosAPI {
         url.searchParams.append("limit", String(limit));
         url.searchParams.append("offset", String(offset));
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<NekosResponse>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return (<NekosResponse> await response.json())["data"]
+        return response["data"]
             .map(image => new NekosImage(image));
     }
 
@@ -132,11 +115,9 @@ export class NekosAPI {
 
         const url = new URL(`${this.baseUrl}character/${id}`);
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<{data: Character}>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return (await response.json())["data"] as Character;
+        return response["data"];
     }
 
     @preventRateLimit()
@@ -147,22 +128,18 @@ export class NekosAPI {
         url.searchParams.append("limit", String(limit));
         url.searchParams.append("offset", String(offset));
 
-        const response = await fetch(url);
+        const response = await this.fetchResponse<NekosCategoryResponse<true>>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return (<NekosCategoryResponse<true>> await response.json())["data"];
+        return response["data"];
     }
 
     @preventRateLimit()
     public async getCategoryByID(categoryID: string): Promise<Category> {
 
         const url = new URL(`${this.baseUrl}category/${categoryID}`);
-        const response = await fetch(url);
+        const response = await this.fetchResponse<NekosCategoryResponse<false>>(url);
 
-        await NekosAPI.checkResponseCode(response)
-
-        return (<NekosCategoryResponse<false>> await response.json())["data"];
+        return response["data"];
     }
 
     private static validateToken(token?: string) {
@@ -171,12 +148,6 @@ export class NekosAPI {
         }
         else {
             return true;
-        }
-    }
-
-    private static async checkResponseCode(response: Response) {
-        if ((response.status > 200 && response.status <= 300) || !response.ok) {
-            throw new Error(`An error occurred while fetching the data from the server. ${response.statusText}. Status: ${response.status}`)
         }
     }
 
