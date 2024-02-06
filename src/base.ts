@@ -4,25 +4,18 @@ import { SocksProxyAgent } from "socks-proxy-agent";
 import { CustomProxy } from "./Proxy";
 
 export default class Base {
-    protected socks5Proxy: CustomProxy
+    protected socks5Proxy?: CustomProxy;
 
-    constructor() {
-        this.socks5Proxy = {
-            protocol: "socks5",
-            host: process.env.PROXY_HOST!,
-            port: parseFloat(process.env.PROXY_PORT!),
-            auth: {
-                username: process.env.PROXY_USER != undefined ? process.env.PROXY_USER : "",
-                password: process.env.PROXY_PASS != undefined ? process.env.PROXY_PASS : "",
-            },
+    constructor(proxy?: CustomProxy) {
+        if (proxy) {
+            this.socks5Proxy = proxy;
         }
-
     }
 
     protected async fetchResponse<T>(url: URL, config?: axios.AxiosRequestConfig): Promise<T> {
 
         const promise = async (): Promise<axios.AxiosResponse<T>> => {
-            if (process.env.PROXY_HOST != undefined) {
+            if (this.socks5Proxy != undefined) {
 
                 const proxyURL = `${this.socks5Proxy.protocol}://${this.socks5Proxy.auth.username}:${this.socks5Proxy.auth.password}@${this.socks5Proxy.host}:${this.socks5Proxy.port}`;
 

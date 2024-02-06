@@ -1,5 +1,6 @@
 import { URL } from "url";
 import Base from "../base";
+import { CustomProxy } from "../Proxy";
 import { preventRateLimit } from "./preventRateLimit";
 import { TagNames, Tags } from "./types/Tags";
 import { ArrayResponse, Artist, Character, NekosImage } from "./types/nekosImage";
@@ -17,8 +18,8 @@ export class NekosAPI extends Base {
     */
     public static lastRequest = new Date();
 
-    public constructor() {
-        super();
+    public constructor(proxy?: CustomProxy) {
+        super(proxy);
         this.baseUrl = "https://api.nekosapi.com/v3/";
         NekosAPI.lastRequest = new Date();
     }

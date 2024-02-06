@@ -1,5 +1,6 @@
 import { URL } from "url";
 import Base from "../base";
+import { CustomProxy } from "../Proxy";
 import { Artist, Category, Character, NekosCategoryResponse, NekosData, NekosResponse } from "./Interfaces";
 import NekosImage from "./NekosImage";
 import { preventRateLimit } from "./preventRateLimit";
@@ -13,8 +14,8 @@ export class NekosAPI extends Base {
     */
     public static lastRequest = new Date();
 
-    public constructor(token?: string) {
-        super();
+    public constructor(token?: string, proxy?: CustomProxy) {
+        super(proxy);
         if (token && NekosAPI.validateToken(token)) {
             this.token = token;
         }
